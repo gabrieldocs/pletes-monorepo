@@ -1,35 +1,66 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
-import './App.css'
+import './App.css';
+import { ThemeProvider } from '@emotion/react';
+import { green, indigo } from '@mui/material/colors';
+import { createTheme } from '@mui/material';
+import { ToastContainer } from 'react-toastify';
+import { RouterProvider } from 'react-router-dom';
 
-function App() {
-  const [count, setCount] = useState(0)
+import 'react-toastify/dist/ReactToastify.css';
+import { router } from './router';
+import { AuthProvider } from './context/auth';
 
-  return (
-    <>
-      <div>
-        <a href="https://vitejs.dev" target="_blank">
-          <img src={viteLogo} className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://react.dev" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
-      </div>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-        <p>
-          Edit <code>src/App.tsx</code> and save to test HMR
-        </p>
-      </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
-    </>
-  )
+declare module '@mui/material/styles' {
+  interface Theme {
+    status: {
+      danger: string;
+    };
+  }
+  // allow configuration using `createTheme`
+  interface ThemeOptions {
+    status?: {
+      danger?: string;
+    };
+  }
 }
 
-export default App
+const theme = createTheme({
+  palette: {
+    mode: 'light',
+    primary: {
+      main: indigo['A700'],
+    },
+    secondary: {
+      main: green[500],
+    },
+  },
+  shape: {
+    borderRadius: 12,
+  },
+});
+
+function App() {
+
+  return (
+    <AuthProvider>
+      <ThemeProvider theme={theme}>
+        <ToastContainer
+          position="top-right"
+          autoClose={5000}
+          hideProgressBar={false}
+          newestOnTop={false}
+          closeOnClick
+          rtl={false}
+          pauseOnFocusLoss
+          draggable
+          pauseOnHover
+          theme="light"
+        />
+        {/* <MainDialog /> */}
+        <RouterProvider router={router} />
+        {/* <MainEditor></MainEditor> */}
+      </ThemeProvider>
+    </AuthProvider>
+  );
+}
+
+export default App;
